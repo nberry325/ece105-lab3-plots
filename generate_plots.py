@@ -148,9 +148,9 @@ def plot_boxplot(sensor_a, sensor_b, timestamps, ax):
 def main():
     """Generate sensor plots and save them to a PNG file.
 
-    This function generates synthetic data, builds a 1x3 subplot figure,
-    renders the available sensor visualizations, adjusts the layout, and
-    saves the result as ``sensor_analysis.png``.
+    This function generates synthetic data, builds a 2x2 subplot figure,
+    renders the scatter, histogram, and box plot visualizations, leaves
+    the fourth subplot empty, and saves the result as ``sensor_analysis.png``.
 
     Returns
     -------
@@ -159,10 +159,19 @@ def main():
     """
     sensor_a, sensor_b, timestamps = generate_data(seed=1234)
 
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
-    plot_scatter(sensor_a, sensor_b, timestamps, axes[0])
-    plot_histogram(sensor_a, sensor_b, timestamps, axes[1])
-    plot_boxplot(sensor_a, sensor_b, timestamps, axes[2])
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    plot_scatter(sensor_a, sensor_b, timestamps, axes[0, 0])
+    plot_histogram(sensor_a, sensor_b, timestamps, axes[0, 1])
+    plot_boxplot(sensor_a, sensor_b, timestamps, axes[1, 0])
+
+    # Summary statistics in the fourth cell
+    stats_text = (
+        f"Sensor A: mean={sensor_a.mean():.2f}, std={sensor_a.std():.2f}\\n"
+        f"Sensor B: mean={sensor_b.mean():.2f}, std={sensor_b.std():.2f}\\n"
+        f"Overall mean: {np.concatenate([sensor_a, sensor_b]).mean():.2f}"
+    )
+    axes[1, 1].text(0.5, 0.5, stats_text, ha='center', va='center', fontsize=12, family='monospace')
+    axes[1, 1].set_axis_off()
 
     fig.tight_layout()
     fig.savefig('sensor_analysis.png', dpi=150, bbox_inches='tight')
