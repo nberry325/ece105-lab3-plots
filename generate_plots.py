@@ -108,6 +108,43 @@ def plot_histogram(sensor_a, sensor_b, timestamps, ax):
     return None
 
 
+def plot_boxplot(sensor_a, sensor_b, timestamps, ax):
+    """Draw side-by-side box plots for two sensor temperature distributions.
+
+    Parameters
+    ----------
+    sensor_a : numpy.ndarray
+        1D array of Sensor A temperature values in Celsius.
+    sensor_b : numpy.ndarray
+        1D array of Sensor B temperature values in Celsius.
+    timestamps : numpy.ndarray
+        1D array of time values in seconds corresponding to the readings.
+        This parameter is included for compatibility but is not used in
+        the box plot itself.
+    ax : matplotlib.axes.Axes
+        Axes object on which to draw the box plots.
+
+    Returns
+    -------
+    None
+        The function modifies ``ax`` in place and returns nothing.
+    """
+    ax.boxplot([sensor_a, sensor_b], labels=['Sensor A', 'Sensor B'], patch_artist=True,
+               boxprops=dict(facecolor='lightgray', color='black'),
+               medianprops=dict(color='black'),
+               whiskerprops=dict(color='black'),
+               capprops=dict(color='black'))
+
+    overall_mean = np.concatenate([sensor_a, sensor_b]).mean()
+    ax.axhline(overall_mean, color='red', linestyle='--', linewidth=1.5, label='Overall Mean')
+
+    ax.set_title('Sensor Temperature Distributions')
+    ax.set_ylabel('Temperature (°C)')
+    ax.legend()
+    ax.grid(axis='y', alpha=0.3)
+    return None
+
+
 def main():
     """Generate sensor plots and save them to a PNG file.
 
@@ -125,9 +162,7 @@ def main():
     fig, axes = plt.subplots(1, 3, figsize=(18, 5))
     plot_scatter(sensor_a, sensor_b, timestamps, axes[0])
     plot_histogram(sensor_a, sensor_b, timestamps, axes[1])
-
-    # The third subplot is reserved for an additional visualization.
-    axes[2].axis('off')
+    plot_boxplot(sensor_a, sensor_b, timestamps, axes[2])
 
     fig.tight_layout()
     fig.savefig('sensor_analysis.png', dpi=150, bbox_inches='tight')
