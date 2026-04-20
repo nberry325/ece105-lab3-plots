@@ -10,6 +10,7 @@ Usage
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def generate_data(seed):
@@ -105,3 +106,32 @@ def plot_histogram(sensor_a, sensor_b, timestamps, ax):
     ax.legend()
     ax.grid(alpha=0.3)
     return None
+
+
+def main():
+    """Generate sensor plots and save them to a PNG file.
+
+    This function generates synthetic data, builds a 1x3 subplot figure,
+    renders the available sensor visualizations, adjusts the layout, and
+    saves the result as ``sensor_analysis.png``.
+
+    Returns
+    -------
+    None
+        The function saves the figure to disk and does not return any value.
+    """
+    sensor_a, sensor_b, timestamps = generate_data(seed=1234)
+
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+    plot_scatter(sensor_a, sensor_b, timestamps, axes[0])
+    plot_histogram(sensor_a, sensor_b, timestamps, axes[1])
+
+    # The third subplot is reserved for an additional visualization.
+    axes[2].axis('off')
+
+    fig.tight_layout()
+    fig.savefig('sensor_analysis.png', dpi=150, bbox_inches='tight')
+
+
+if __name__ == '__main__':
+    main()
