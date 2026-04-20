@@ -38,3 +38,33 @@ def generate_data(seed):
     sensor_b = rng.normal(loc=27.0, scale=4.5, size=200)
 
     return sensor_a, sensor_b, timestamps
+
+
+def plot_scatter(sensor_a, sensor_b, timestamps, ax):
+    """Draw scatter points for two sensors on an existing Axes.
+
+    Parameters
+    ----------
+    sensor_a : numpy.ndarray
+        1D array of Sensor A temperature values in Celsius.
+    sensor_b : numpy.ndarray
+        1D array of Sensor B temperature values in Celsius.
+    timestamps : numpy.ndarray
+        1D array of time values in seconds corresponding to the readings.
+    ax : matplotlib.axes.Axes
+        Axes object on which to draw the scatter plot.
+
+    Returns
+    -------
+    None
+        The function modifies ``ax`` in place and returns nothing.
+    """
+    ax.scatter(timestamps, sensor_a, color='tab:blue', alpha=0.7, label='Sensor A')
+    ax.scatter(timestamps, sensor_b, color='tab:orange', alpha=0.7, label='Sensor B')
+
+    ax.set_title('Sensor Temperature vs Time')
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Temperature (°C)')
+    ax.legend()
+    ax.grid(alpha=0.3)
+    return None
